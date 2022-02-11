@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://121.43.101.40:3306/server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  application:
+    name: MiddleGround-Client-1
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 8406
+
+ws:
+  server:
+    url: ws://127.0.0.1:12345/ws
+#    token: Um9ob242NjY$
+    service-name: test-service-1
+    token: Um9ob242NjY=
+
+
+logging:
+  level:
+    com.rohon: debug
+    io.netty: trace

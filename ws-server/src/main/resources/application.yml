@@ -1,0 +1,83 @@
+spring:
+  redis:
+    host: 124.222.42.190
+    password: zyf19980820
+    port: 6379
+    timeout: 3S
+    database: 0
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://121.43.101.40:3306/server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  application:
+    name: MiddleGround-Server
+  kafka:
+    bootstrap-servers: 124.222.42.190:9092
+    ###########【初始化生产者配置】###########
+    producer:
+      # 重试次数
+      retries: 0
+      # 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、all/-1)
+      acks: 1
+      # 批量大小
+      # 当生产端积累的消息达到batch-size或接收到消息linger.ms后,生产者就会将消息提交给kafka
+      # linger.ms为0表示每接收到一条消息就提交给kafka,这时候batch-size其实就没用了
+      batch-size: 16384
+      properties:
+        linger:
+          # 提交延时
+          ms: 0
+
+      # 生产端缓冲区大小
+      buffer-memory: 33554432
+      # Kafka提供的序列化和反序列化类
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    ###########【初始化消费者配置】###########
+    consumer:
+      # 是否自动提交offset
+      enable-auto-commit: true
+      # 提交offset延时(接收到消息后多久提交offset)
+      auto-commit-interval: 1000ms
+      # 当kafka中没有初始offset或offset超出范围时将自动重置offset
+      # earliest:重置为分区中最小的offset;
+      # latest:重置为分区中最新的offset(消费分区中新产生的数据);
+      # none:只要有一个分区不存在已提交的offset,就抛出异常
+      auto-offset-reset: latest
+      # 默认的消费组ID
+      group-id: defaultConsumerGroup
+      # Kafka提供的序列化和反序列化类
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 批量消费每次最多消费多少条消息
+#      max-poll-records: 50
+
+    listener:
+      # 消费端监听的topic不存在时，项目启动会报错(关掉)
+      missing-topics-fatal: false
+      # 启用批量消费
+#      type: batch
+
+
+server:
+  port: 8405
+
+
+zookeeper:
+  curator:
+    ip: 127.0.0.1:2181
+    sessionTimeOut: 50000
+    sleepMsBetweenRetry: 1000
+    maxRetries: 3
+    namespace: demo
+    connectionTimeoutMs: 50000
+
+ws:
+  server:
+    port: 12345
+    token: Um9ob242NjY=
+
+logging:
+  level:
+    com.rohon: debug
+    io.netty: trace
