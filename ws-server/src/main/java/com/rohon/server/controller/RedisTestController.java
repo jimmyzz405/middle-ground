@@ -1,5 +1,6 @@
 package com.rohon.server.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -18,10 +20,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequestMapping("/redis")
 @RestController
+@Api("redis")
 public class RedisTestController {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    /**
+     * 天坑：用@Autowired注入时指定参数类型会找不到（byType）
+     * @link https://blog.csdn.net/zhaoheng314/article/details/81564166
+     */
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private RedissonClient redissonClient;
@@ -72,7 +79,7 @@ public class RedisTestController {
                 ArrayList<String> keys = new ArrayList<>();
                 keys.add(key);
                 // 调用lua脚本释放
-                Long execute = (Long) redisTemplate.execute(script, keys, res);
+                Long execute = redisTemplate.execute(script, keys, res);
                 System.out.println("execute执行结果，1表示执行del，0表示未执行 ===== " + execute);
                 log.info("{} 解锁成功，结束处理业务", key);
             }

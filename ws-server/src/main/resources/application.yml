@@ -24,6 +24,9 @@ spring:
       # linger.ms为0表示每接收到一条消息就提交给kafka,这时候batch-size其实就没用了
       batch-size: 16384
       properties:
+#        partitioner:
+#          # 自定义分区器
+#          class: com.rohon.server.config.CustomizedPartitioner
         linger:
           # 提交延时
           ms: 0
